@@ -1,0 +1,35 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+alarm_control_panel:
+  - platform: template
+    panels:
+      safe_alarm_panel:
+        name: "Alarm Panel"
+        value_template: "{{states('sensor.dscalarm_partition_1_status')}}"
+        code_arm_required: false
+        
+        arm_away:
+          - service: esphome.juancaalarm_alarm_arm_away
+                  
+        arm_home:
+          - service: esphome.juancaalarm_alarm_arm_home
+          
+        arm_night:
+          - service: esphome.juancaalarm_alarm_arm_night
+            data_template:
+              code: '{{code}}' #if you didnt set it in the yaml, then send the code here
+          
+        disarm:
+          - service: esphome.juancaaalarm_alarm_disarm
+            data_template:
+              code: '{{code}}'                    
